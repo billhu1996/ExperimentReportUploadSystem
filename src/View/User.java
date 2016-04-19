@@ -15,6 +15,13 @@ public class User {
     private String name;
     private UserType userType;
 
+    public User(String id, String password, String name, UserType userType) {
+        this.userType = userType;
+        this.name = name;
+        this.password = password;
+        this.id = id;
+    }
+    public User() {}
 
     public static User login(String id, String password) throws Error {
         String MD5password = MD5.string2MD5(password);
@@ -27,9 +34,15 @@ public class User {
         }
     }
 
-//    Error register(User temporaryUser) {
-//
-//    }
+    public static User register(User temporaryUser) throws Error {
+        try {
+            ApplicationContext context = new ClassPathXmlApplicationContext("SupportingFiles/beans.xml");
+            UserJDBCTemplate userJDBCTemplate = (UserJDBCTemplate)context.getBean("userJDBCTemplate");
+            return userJDBCTemplate.register(temporaryUser);
+        } catch (Error error) {
+            throw error;
+        }
+    }
 
     public String getId() {
         return id;
@@ -39,6 +52,9 @@ public class User {
     }
     public UserType getUserType() {
         return userType;
+    }
+    public String getPassword() {
+        return password;
     }
     public void setId(String id) {
         this.id = id;
@@ -55,9 +71,14 @@ public class User {
 
     public static void main(String[] args) {
         User user = login("2014011251", "password");
-        System.out.println("用户名: " + user.getName() + user.getUserType() + user.getId());
+        System.out.println("用户名: " + user.getName() + user.getUserType().getIndex() + user.getId());
         try {
             User userWrong = login("2014011251", "wrongpassword");
+        } catch (Error error) {
+            System.out.println(error.getMessage());
+        }
+        try {
+            User registerUser = User.register(new User("2015011195", "password2", "miss", new UserType(1)));
         } catch (Error error) {
             System.out.println(error.getMessage());
         }

@@ -1,6 +1,7 @@
 package Model;
 
 import External.Error;
+import External.MD5;
 import View.User;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.dao.DataAccessException;
@@ -20,7 +21,7 @@ public class UserJDBCTemplate {
 
     public User login(String id, String password) throws Error {
         try {
-            String SQL = "select * from user where exists (select * from user where id = ? and password = ?)";
+            String SQL = "select * from user where id = ? and password = ?";
             User user = jdbcTemplateObject.queryForObject(SQL, new Object[]{id, password}, new UserMapper());
             return user;
         } catch (DataAccessException exception) {
@@ -28,4 +29,17 @@ public class UserJDBCTemplate {
         }
     }
 
+    public User register(User user) throws Error {
+        try {
+            String SQL = "select * from user where id = ?";
+            User existingUser = jdbcTemplateObject.queryForObject(SQL, new Object[]{user.getId()}, new UserMapper());
+            throw new Error(2, "用户名已占用!!");
+        } catch (DataAccessException exception) {
+            String SQL = "insert into user (id, name, password, user_type) values (?, ?, ?, ?)";
+            jdbcTemplateObject.update(SQL, user.getId(), user.getName(), MD5.string2MD5(user.getPassword()), user.getUserType().getIndex());
+            SQL = "select * from user where id = ?";
+            User userRegistered = jdbcTemplateObject.queryForObject(SQL, new Object[]{user.getId()}, new UserMapper());
+            return userRegistered;
+        }
+    }
 }
