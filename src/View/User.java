@@ -87,5 +87,10 @@ public class User {
         } catch (Error error) {
             System.out.println(error.getMessage());
         }
+        try {
+            User registerUser = User.register(new User("2015011195", "password2", "miss", new UserType(1)));
+        } catch (Error error) {
+            System.out.println(error.getMessage());
+        }
     }
 }
