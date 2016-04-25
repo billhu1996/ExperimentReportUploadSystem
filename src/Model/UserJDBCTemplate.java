@@ -21,9 +21,13 @@ public class UserJDBCTemplate {
 
     public User login(String id, String password) throws Error {
         try {
-            String SQL = "select * from user where id = ? and password = ?";
-            User user = jdbcTemplateObject.queryForObject(SQL, new Object[]{id, password}, new UserMapper());
-            return user;
+            String SQL = "select * from user where id = ?";
+            User user = jdbcTemplateObject.queryForObject(SQL, new Object[]{id}, new UserMapper());
+            if (password.equals(user.getPassword())) {
+                return user;
+            } else {
+                throw new Error(1, "用户名或密码错误!!");
+            }
         } catch (DataAccessException exception) {
             throw new Error(1, "用户名或密码错误!!");
         }

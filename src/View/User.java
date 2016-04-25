@@ -70,8 +70,12 @@ public class User {
     }
 
     public static void main(String[] args) {
-        User user = login("2014011251", "password");
-        System.out.println("用户名: " + user.getName() + user.getUserType().getIndex() + user.getId());
+        try {
+            User user = login("2014011251", "password");
+            System.out.println("用户名: " + user.getName() + user.getUserType().getIndex() + user.getId());
+        } catch (Error error) {
+            System.out.println(error.getMessage());
+        }
         try {
             User userWrong = login("2014011251", "wrongpassword");
         } catch (Error error) {
