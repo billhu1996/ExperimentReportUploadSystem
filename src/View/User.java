@@ -71,13 +71,13 @@ public class User {
 
     public static void main(String[] args) {
         try {
-            User user = login("2014011251", "password");
+            User user = User.login("2014011251", "password");
             System.out.println("用户名: " + user.getName() + user.getUserType().getIndex() + user.getId());
         } catch (Error error) {
             System.out.println(error.getMessage());
         }
         try {
-            User userWrong = login("2014011251", "wrongpassword");
+            User userWrong = User.login("2014011251", "wrongpassword");
         } catch (Error error) {
             System.out.println(error.getMessage());
         }
